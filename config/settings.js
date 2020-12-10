@@ -1,4 +1,4 @@
-const secrets = require("./secrets");
+const secrets = require("../secrets");
 
 const env = process.env.NODE_ENV || "dev";
 

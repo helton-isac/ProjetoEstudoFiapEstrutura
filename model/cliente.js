@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 
 const tabela = new mongoose.Schema({
   nome: { type: String, required: true },

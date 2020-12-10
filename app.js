@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const chec = require("clientes-helton-email-cpf");
 
@@ -51,7 +51,9 @@ app.get("/", cors(optionsConfig), (req, res) => {
     .select("-senha");
 });
 
-app.get("/admin", cors(optionsConfig), (req, res) => {});
+app.get("/admin", cors(optionsConfig), (req, res) => {
+  res.send(req.content);
+});
 
 app.get("/admin/users", cors(optionsConfig), autentica, (req, res) => {});
 
