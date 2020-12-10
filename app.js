@@ -11,23 +11,61 @@ const settings = require("./config/settings");
 const cliente = require("./model/cliente");
 const autentica = require("./middleware/autentica");
 
-app.get("/", (req, res) => {});
+const app = express();
 
-app.get("/admin", autentica, (req, res) => {});
+app.use(bodyParser.json);
 
-app.get("/admin/users", autentica, (req, res) => {});
+const optionsConfig = {
+  origin: "*",
+  optionsSuccessStatus: 200,
+};
 
-app.get("/admin/clientes", autentica, (req, res) => {});
+const createUserToken = (id, usuario, nome) => {
+  return jwt.sign(
+    {
+      id: id,
+      usuario: usuario,
+      nome: nome,
+    },
+    settings.jwt_key,
+    { expiresIn: settings.jwt_expires }
+  );
+};
 
-app.post("/login", (req, res) => {});
+mongoose.connect(settings.dbpath, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
-app.post("/cadastro", (req, res) => {
+app.get("/", cors(optionsConfig), (req, res) => {
+  cliente
+    .find((erro, dados) => {
+      if (erro) {
+        res
+          .status(404)
+          .send({ rs: `Erro ao tentar listar os clientes ${erro}` });
+        return;
+      }
+      res.status.send({ rs: dados });
+    })
+    .select("-senha");
+});
+
+app.get("/admin", cors(optionsConfig), (req, res) => {});
+
+app.get("/admin/users", cors(optionsConfig), autentica, (req, res) => {});
+
+app.get("/admin/clientes", cors(optionsConfig), autentica, (req, res) => {});
+
+app.post("/login", cors(optionsConfig), (req, res) => {});
+
+app.post("/cadastro", cors(optionsConfig), (req, res) => {
   //validação de cpf e email
 });
 
-app.put("/atualizar/:id", autentica, (req, res) => {});
+app.put("/atualizar/:id", cors(optionsConfig), autentica, (req, res) => {});
 
-app.delete("/apagar/:id", autentica, (req, res) => {});
+app.delete("/apagar/:id", cors(optionsConfig), autentica, (req, res) => {});
 
 //Vamos adicionar um tratamento ao erro de requisição inexistente, ou seja, o erro 404
 app.use((req, res) => {
