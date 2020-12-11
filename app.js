@@ -13,7 +13,7 @@ const autentica = require("./middleware/autentica");
 
 const app = express();
 
-app.use(bodyParser.json);
+app.use(bodyParser.json());
 
 const optionsConfig = {
   origin: "*",
@@ -46,7 +46,7 @@ app.get("/", cors(optionsConfig), (req, res) => {
           .send({ rs: `Erro ao tentar listar os clientes ${erro}` });
         return;
       }
-      res.status.send({ rs: dados });
+      res.status(200).send({ rs: dados });
     })
     .select("-senha");
 });
@@ -106,7 +106,19 @@ app.post("/login", cors(optionsConfig), (req, res) => {
 });
 
 app.post("/cadastro", cors(optionsConfig), (req, res) => {
-  //validação de cpf e email
+  const vc = new chec.Cliente(req.body.email, req.body.cpf);
+  if (!chec.validaEmail(vc)) {
+    res.status(400).send({ rs: "E-mail inválido" });
+    return;
+  }
+  if (!chec.validaCPF(vc)) {
+    res.status(400).send({ rs: "CPF inválido" });
+    return;
+  }
+  const dados = new cliente(req.body);
+  dados.save().then(() => {
+    res.status(201).send({ rs: "Cliente cadastrado" });
+  });
 });
 
 app.put("/atualizar/:id", cors(optionsConfig), autentica, (req, res) => {});

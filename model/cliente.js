@@ -15,7 +15,7 @@ const tabela = new mongoose.Schema({
 
 tabela.pre("save", function (next) {
   let cliente = this;
-  if (!cliente.isModified("senha")) return next;
+  if (!cliente.isModified("senha")) return next();
   bcrypt.hash(cliente.senha, 10, (err, encr) => {
     cliente.senha = encr;
     return next();
