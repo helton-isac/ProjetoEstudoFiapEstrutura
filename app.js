@@ -39,7 +39,7 @@ app.use(bodyParser.json());
 //status code 200 para dispositivos antigos e smarttv
 const optionsConfig = {
   origin: "*",
-  optionsSucessStatus: 200,
+  optionsSuccessStatus: 200,
 };
 
 //Gerar token ao usuario
